@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoal Presence</title>
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.png">
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+
+<body>
+    <img class="logo" src="./assets/logo.svg">
+
+    <div id="home">
+        <button class="big discord" onclick="window.location.href='/discord/auth'">
+            <img src="./assets/discord.svg">Login with Discord
+        </button>
+    </div>
+
+    <div id="friendRequest" hidden>
+        <div class="card">
+            <div class="profiles">
+                <div class="profile">
+                    <img class="discordImageUri profilePicture" src="./assets/discordDefault.svg">
+                    <p class="discordName">Discord user</p>
+                </div>
+                <img src="./assets/add.svg">
+                <div class="profile">
+                    <img class="presenceAccountImageUri profilePicture" src="./assets/nintendoDefault.svg">
+                    <p class="presenceAccountName">Presence account</p>
+                </div>
+            </div>
+
+            <div class="form">
+                <div class="friendRequestForm">
+                    <p>
+                        To monitor your play activity, you will need to get a friend request from
+                        <presenceAccountName class="presenceAccountName">Shoal</presenceAccountName>.
+                        Enter your friend code below to proceed.
+                    </p>
+                    <input type="text" id="friendCodeInput" placeholder="0000 - 0000 - 0000" required>
+                </div>
+
+                <button class="big nintendo" onclick="confirmFriendCode()">
+                    <img src="./assets/nintendo.svg">Confirm friend code
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings" hidden>
+        <div class="card">
+            <div class="linked">
+                <div class="profiles">
+                    <div class="profile">
+                        <img class="discordImageUri profilePicture" src="./assets/discordDefault.svg">
+                        <p class="discordName">Discord user</p>
+                    </div>
+                    <img src="./assets/link.svg">
+                    <div class="profile">
+                        <img class="nintendoImageUri profilePicture" src="./assets/nintendoDefault.svg">
+                        <p class="nintendoName">Nintendo account</p>
+                    </div>
+                </div>
+                <p>Your accounts are linked</p>
+            </div>
+
+            <div class="toggles">
+                <label class="toggle" for="presenceToggle">
+                    <p>Enable Rich Presence</p>
+                    <input type="checkbox" id="presenceToggle" onchange="updateSettings()">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle" for="playTimeToggle">
+                    <p>Show amount of hours played</p>
+                    <input type="checkbox" id="playTimeToggle" onchange="updateSettings()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="actions">
+                <button onclick="changeNintendoAccount()">Change Nintendo account</button>
+                <button class="deleteButton" onclick="deleteAccount()">Delete account</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+</body>
+
+</html>

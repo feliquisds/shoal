@@ -1,0 +1,5 @@
+# create a classic token with your GitHub account and allow read:packages
+# then append your token into a .npmrc file
+
+@samuelthomas2774:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=

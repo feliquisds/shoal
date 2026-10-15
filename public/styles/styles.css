@@ -1,0 +1,303 @@
+/* colors */
+:root {
+    --gradient-start: #001886;
+    --gradient-middle: #0b1943;
+    --gradient-end: #000;
+
+    --accent-white: #fff;
+    --accent-dark: #003DCA;
+    --accent-light: #2667FF;
+    --inactive: #8A8B8C;
+
+    --card: #151618;
+    --button: #2F3032;
+    --text-box: #1A1C1F;
+    --text-box-border: #2F3032;
+
+    --text: #fff;
+    --text-muted: #8A8B8C;
+
+    --success: #00A36C;
+    --warning: #F5A623;
+    --critical: #AF4142;
+
+    --discord: #5562EA;
+    --nintendo: #B80000;
+}
+
+
+
+/* constants */
+:root {
+    --card-radius: 29px;
+    --button-radius: 29px;
+    --text-box-radius: 7px;
+
+    --max-width: 400px;
+}
+
+
+
+/* base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    font-size: medium;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+body {
+    padding: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background: radial-gradient(circle at 40% 40%, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100dvh;
+    width: 100dvw;
+    gap: 30px;
+}
+
+.logo {
+    width: 20rem;
+    height: auto;
+}
+
+
+
+/* cards and profiles */
+.card {
+    background-color: var(--card);
+    border-radius: var(--card-radius);
+    min-width: var(--max-width);
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profiles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.profiles>img {
+    width: 26px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.profile>p {
+    font-weight: 900;
+}
+
+.profilePicture {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.linked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.linked>p {
+    font-weight: 900;
+}
+
+
+
+/* friend request form */
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: var(--max-width);
+}
+
+.friendRequestForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.friendRequestForm>input {
+    background-color: var(--text-box);
+    border: 2px solid var(--text-box-border);
+    border-radius: 7px;
+    padding: 10px;
+    color: var(--text);
+    text-align: center;
+    width: 100%;
+}
+
+.friendRequestForm>input:focus {
+    outline: none;
+}
+
+.friendRequestForm>input::placeholder {
+    color: var(--text-muted);
+}
+
+
+
+/* buttons */
+button {
+    gap: 10px;
+    flex-direction: row;
+    display: flex;
+    background-color: var(--button);
+    color: var(--text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 29px;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+    justify-content: center;
+}
+
+button:hover {
+    filter: brightness(1.2);
+}
+
+button:hover:active {
+    filter: brightness(0.75) saturate(1.2);
+}
+
+button.big {
+    padding: 20px 40px;
+    font-weight: 900;
+}
+
+button.discord {
+    background-color: var(--discord);
+}
+
+button.nintendo {
+    background-color: var(--nintendo);
+}
+
+.actions {
+    max-width: var(--max-width);
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.deleteButton {
+    font-weight: 900;
+    background-color: var(--critical);
+}
+
+
+
+/* toggles */
+.toggles {
+    max-width: var(--max-width);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.toggle {
+    padding: 10px 10px 10px 12px;
+    width: 100%;
+    border-radius: 29px;
+    background-color: var(--button);
+    color: var(--text);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.toggle>input {
+    display: none;
+}
+
+.slider {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background-color: var(--inactive);
+    border-radius: 34px;
+    transition: background-color 0.3s ease;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--text);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+input:checked+.slider {
+    background-color: var(--accent-light);
+}
+
+input:checked+.slider::before {
+    transform: translateX(16px);
+}
+
+
+
+/* responsiveness */
+@media (max-width: 550px) {
+    :root {
+        --max-width: 350px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions>button {
+        width: 100%;
+    }
+
+    .profiles {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
