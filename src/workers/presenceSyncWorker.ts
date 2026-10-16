@@ -10,7 +10,7 @@ import { logInfoWithDiscordId as logInfo, logErrorWithDiscordId as logError } fr
 import upsertDiscordUser from '../repository/upsertDiscordUser';
 import { describeDiscordRefreshTokenResponse } from '../utils/errorUtils';
 import buildSyncUsers from '../builders/syncUsersBuilder';
-import { PresenceGame, PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
+import { PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
 
 const syncInterval = Number(process.env.SYNC_INTERVAL) * 1000;
 export let usersOnline = new Map<string, { timestamp: number, game: string }>();
