@@ -1,7 +1,6 @@
 import { PresenceGame, Friend_4, PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
 
-export default function buildPresence(friend: Friend_4, startTimestamp: number, showPlayTime: boolean) {
-    const presence = friend.presence as PresenceOnline_4;
+export default function buildPresence(presence: PresenceOnline_4, startTimestamp: number, showPlayTime: boolean) {
     const game = presence.game as PresenceGame;
     const name = game.name;
     const playTime = Math.floor(game.totalPlayTime / 60);
@@ -13,9 +12,17 @@ export default function buildPresence(friend: Friend_4, startTimestamp: number, 
     const playTimeFormatted = playTime < 1 ? 'a little while' : playTimeHours;
     const playTimeText = firstTimePlaying ? 'First time playing!' : `Played for ${playTimeFormatted}`;
 
+    const isNintendoClassics = name.includes('Nintendo Classics');
+    let nintendoClassicsText = '';
+    if (isNintendoClassics) {
+        let gameName = game.sysDescription.slice(game.sysDescription.indexOf(':') + 1).trim();
+        let nintendoClassicsConsole = name.split(/\s*\p{Pd}+\s*/u)[0].trim();
+        nintendoClassicsText = `${gameName} (${nintendoClassicsConsole})`;
+    }
+
     return {
         activities: [{
-            name: name,
+            name: isNintendoClassics ? nintendoClassicsText : name,
             type: 0,
             details: showPlayTime ? playTimeText : undefined,
             state: platform,
