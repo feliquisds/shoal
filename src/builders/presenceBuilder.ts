@@ -1,6 +1,6 @@
 import { PresenceGame, PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
 
-export default function buildPresence(presence: PresenceOnline_4, startTimestamp: number, showPlayTime: boolean) {
+export default function buildPresence(presence: PresenceOnline_4, lastGame: string | undefined, lastTimestamp: number | undefined, showPlayTime: boolean) {
     const game = presence.game as PresenceGame;
     const name = game.name;
     const playTime = Math.floor(game.totalPlayTime / 60);
@@ -12,17 +12,19 @@ export default function buildPresence(presence: PresenceOnline_4, startTimestamp
     const playTimeFormatted = playTime < 1 ? 'a little while' : playTimeHours;
     const playTimeText = firstTimePlaying ? 'First time playing!' : `Played for ${playTimeFormatted}`;
 
-    const isNintendoClassics = name.includes('Nintendo Classics');
-    let nintendoClassicsText = '';
-    if (isNintendoClassics) {
+    const playingNintendoClassicsGame = name.includes('Nintendo Classics') && game.sysDescription.length > 0;
+    let nintendoClassicsGame = '';
+    if (playingNintendoClassicsGame) {
         let gameName = game.sysDescription.slice(game.sysDescription.indexOf(':') + 1).trim();
         let nintendoClassicsConsole = name.split(/\s*\p{Pd}+\s*/u)[0].trim();
-        nintendoClassicsText = `${gameName} (${nintendoClassicsConsole})`;
+        nintendoClassicsGame = `${gameName} (${nintendoClassicsConsole})`;
     }
+
+    const startTimestamp = lastTimestamp && (name == lastGame || nintendoClassicsGame == lastGame) ? lastTimestamp : Date.now();
 
     return {
         activities: [{
-            name: isNintendoClassics ? nintendoClassicsText : name,
+            name: playingNintendoClassicsGame ? nintendoClassicsGame : name,
             type: 0,
             details: showPlayTime ? playTimeText : undefined,
             state: platform,
