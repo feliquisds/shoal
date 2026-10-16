@@ -54,14 +54,10 @@ export default function startPresenceSync(): void {
                 }
 
                 logInfo(user.discordId, 'User is online, updating presence...');
+                const builtPresence = buildPresence(presence as PresenceOnline_4, usersOnline.get(user.discordId)?.game, usersOnline.get(user.discordId)?.timestamp, user.showHoursPlayed);
+                await callUpdatePresence(decryptUserData(accessToken), builtPresence);
 
-                const game = presence.game as PresenceGame;
-                const lastTimestamp = usersOnline.get(user.discordId)?.timestamp;
-                const lastGame = usersOnline.get(user.discordId)?.game;
-                const startTimestamp = lastTimestamp && game.name == lastGame ? lastTimestamp : Date.now();
-
-                await callUpdatePresence(decryptUserData(accessToken), buildPresence(presence as PresenceOnline_4, startTimestamp, user.showHoursPlayed));
-                usersOnline.set(user.discordId, { timestamp: startTimestamp, game: game.name });
+                usersOnline.set(user.discordId, { timestamp: builtPresence.activities[0].timestamps.start, game: builtPresence.activities[0].name });
                 logInfo(user.discordId, 'Presence synced');
             } catch (error: any) {
                 logError(user.discordId, `Network failure: ${error.message}`);
