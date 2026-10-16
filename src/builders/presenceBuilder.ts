@@ -1,4 +1,4 @@
-import { PresenceGame, Friend_4, PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
+import { PresenceGame, PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
 
 export default function buildPresence(presence: PresenceOnline_4, startTimestamp: number, showPlayTime: boolean) {
     const game = presence.game as PresenceGame;
