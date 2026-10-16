@@ -12,6 +12,7 @@ await startLoginPresenceAccount()
 
 const app = express();
 app.disable('x-powered-by');
+app.enable('trust proxy');
 
 app.use(express.json());
 app.use(express.static('public'));
