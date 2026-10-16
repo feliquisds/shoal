@@ -56,8 +56,8 @@ export default function startPresenceSync(): void {
                 logInfo(user.discordId, 'User is online, updating presence...');
 
                 const game = presence.game as PresenceGame;
-                const lastTimestamp = usersOnline.get(user.discordId)?.timestamp || undefined;
-                const lastGame = usersOnline.get(user.discordId)?.game || undefined;
+                const lastTimestamp = usersOnline.get(user.discordId)?.timestamp;
+                const lastGame = usersOnline.get(user.discordId)?.game;
                 const startTimestamp = lastTimestamp && game.name == lastGame ? lastTimestamp : Date.now();
 
                 await callUpdatePresence(decryptUserData(accessToken), buildPresence(presence as PresenceOnline_4, startTimestamp, user.showHoursPlayed));
