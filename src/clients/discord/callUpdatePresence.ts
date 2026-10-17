@@ -1,6 +1,6 @@
 import { DISCORD_HEADLESS_SESSION_URL } from '../../config/appConstants';
 
-export default async function callUpdatePresence(accessToken: string, activity: any): Promise<void> {
+export default async function callUpdatePresence(accessToken: string, activity: any): Promise<string> {
     const response = await fetch(DISCORD_HEADLESS_SESSION_URL, {
         method: 'POST',
         headers: {
@@ -11,6 +11,8 @@ export default async function callUpdatePresence(accessToken: string, activity: 
     });
 
     if (!response.ok) {
-        console.error(`Failed to sync headless presence [${response.status}]`);
+        console.error(`Failed to sync headless presence [${response.status} ${(await response.json()).message}]]`);
     }
+
+    return (await response.json()).token;
 }

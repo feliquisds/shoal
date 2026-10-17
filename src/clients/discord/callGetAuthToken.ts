@@ -19,7 +19,7 @@ export default async function callGetAuthToken(code: string, redirectUri: string
         });
     
     if (!response.ok) {
-        console.error(`Failed to get Discord auth token [${response.status}]`);
+        console.error(`Failed to get Discord auth token [${response.status} ${(await response.json()).message}]`);
     }
 
     return response;

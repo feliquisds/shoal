@@ -8,7 +8,7 @@ export default async function callGetProfile(accessToken: string): Promise<Respo
     });
 
     if (!response.ok) {
-        console.error(`Failed to get Discord profile [${response.status}]`);
+        console.error(`Failed to get Discord profile [${response.status} ${(await response.json()).message}]`);
     }
 
     return response;
