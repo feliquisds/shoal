@@ -55,14 +55,14 @@ export default async function handleDiscordCallback(req: Request, res: Response,
             return res.redirect(`/?${callback.toSearchParams().toString()}`);
         }
 
-        await upsertDiscordUser(user.id, access_token, refresh_token, tokenExpiresAt);
+        const newUser = await upsertDiscordUser(user.id, access_token, refresh_token, tokenExpiresAt);
         console.info(`Discord user ${user.id} added or updated`);
 
         callback.discordTransientToken = createDiscordAuthToken(user.id);
         callback.discordName = user.global_name || user.username;
         callback.discordImageUri = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-        callback.presenceEnabled = true;
-        callback.showPlayTime = true;
+        callback.presenceEnabled = newUser.isPresenceActive;
+        callback.showPlayTime = newUser.showHoursPlayed;
 
         const nintendoUserId = (await getUser(user.id))?.nintendoUserId;
         if (nintendoUserId) {
