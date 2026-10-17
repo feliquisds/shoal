@@ -18,7 +18,7 @@ export default async function callRefreshToken(refreshToken: string): Promise<Re
         });
     
     if (!response.ok) {
-        console.error(`Failed to refresh Discord auth token [${response.status}]`);
+        console.error(`Failed to refresh Discord auth token [${response.status} ${(await response.json()).message}]`);
     }
 
     return response;

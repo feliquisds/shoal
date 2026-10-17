@@ -15,7 +15,7 @@ export default async function callGetNintendoAccountToken(sessionToken: string, 
     });
 
     if (!response.ok) {
-        console.error(`Failed to get Nintendo Account session token [${response.status}]`);
+        console.error(`Failed to get Nintendo Account session token [${response.status} ${(await response.json()).error_description}]`);
     }
 
     return response;
