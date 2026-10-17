@@ -53,7 +53,7 @@ export default function startPresenceSync(): void {
                 }
 
                 logInfo(user.discordId, 'User is online');
-                const builtPresence = buildPresence(presence as PresenceOnline_4, user.discordId, user.showHoursPlayed);
+                const builtPresence = buildPresence(presence as PresenceOnline_4, user.discordId, user.showHoursPlayed, usersOnline.get(user.discordId)?.activityToken);
                 const activityToken = await callUpdatePresence(decryptUserData(accessToken), builtPresence);
 
                 const activity = builtPresence.activities[0];

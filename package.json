@@ -1,6 +1,6 @@
 {
     "name": "shoal",
-    "version": "1.0.4",
+    "version": "1.0.4-rev1",
     "type": "module",
     "scripts": {
         "dev": "tsx watch src/index.ts",
