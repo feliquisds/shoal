@@ -7,7 +7,7 @@ import { startLoginPresenceAccount } from './workers/loginPresenceAccountWorker'
 import { addUserAgent } from '@samuelthomas2774/nxapi'
 
 verifyEnvironment();
-addUserAgent('Shoal/1.0.3 (https://github.com/feliquisds/shoal)');
+addUserAgent('Shoal/1.0.4 (https://github.com/feliquisds/shoal)');
 await startLoginPresenceAccount()
 
 const app = express();
