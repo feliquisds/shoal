@@ -71,9 +71,11 @@ export default async function buildSyncUsers(): Promise<{ syncUsers: User[], fri
     if (usersNotInFriendList.length > 0) {
         console.warn(`Users in the database that are not in the friend list: ${usersNotInFriendList.length}`);
         for (const user of usersNotInFriendList) {
-            usersOnline.delete(user.discordId);
             try {
-                await callDeletePresence(decryptUserData(user.discordAccessToken));
+                if (usersOnline.has(user.discordId)) {
+                    await callDeletePresence(decryptUserData(user.discordAccessToken), usersOnline.get(user.discordId)!.activityToken);
+                    usersOnline.delete(user.discordId);
+                }
                 await deleteUsers([user.discordId]);
                 users = users.filter(u => u.discordId !== user.discordId);
                 console.info(`Cleared missing user: ${user.discordId}`);

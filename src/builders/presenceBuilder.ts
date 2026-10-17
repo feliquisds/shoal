@@ -1,6 +1,10 @@
 import { PresenceGame, PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
+import { usersOnline } from '../workers/presenceSyncWorker';
 
-export default function buildPresence(presence: PresenceOnline_4, lastGame: string | undefined, lastTimestamp: number | undefined, showPlayTime: boolean) {
+export default function buildPresence(presence: PresenceOnline_4, discordId: string, showPlayTime: boolean, activityToken?: string) {
+    const lastGame = usersOnline.get(discordId)?.game;
+    const lastTimestamp = usersOnline.get(discordId)?.timestamp;
+
     const game = presence.game as PresenceGame;
     const name = game.name;
     const playTime = Math.floor(game.totalPlayTime / 60);
@@ -37,6 +41,7 @@ export default function buildPresence(presence: PresenceOnline_4, lastGame: stri
                 large_image: imageUri,
                 large_text: name
             }
-        }]
+        }],
+        ...(activityToken && { token: activityToken })
     };
 }

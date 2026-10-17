@@ -13,8 +13,8 @@ import buildSyncUsers from '../builders/syncUsersBuilder';
 import { PresenceOnline_4 } from '@samuelthomas2774/nxapi/coral';
 
 const syncInterval = Number(process.env.SYNC_INTERVAL) * 1000;
-export let usersOnline = new Map<string, { timestamp: number, game: string }>();
 let inSync = new Set<string>();
+export let usersOnline = new Map<string, { timestamp: number, game: string, activityToken: string }>();
 export let rateLimitRetryAfter: number;
 
 export default function startPresenceSync(): void {
@@ -37,27 +37,27 @@ export default function startPresenceSync(): void {
             inSync.add(user.discordId);
 
             try {
-                logInfo(user.discordId, 'Syncing presence...');
-
                 const { accessToken, success } = await refreshToken(user);
                 if (!success) return;
 
                 const presence = friendList.find(friend => friend.nsaId === user.nintendoUserId!)?.presence;
 
                 if (!presence || presence.state == 'OFFLINE' || presence.state == 'INACTIVE') {
-                    logInfo(user.discordId, 'User is offline, removing presence...');
+                    logInfo(user.discordId, 'User is offline');
                     if (usersOnline.has(user.discordId)) {
+                        await callDeletePresence(decryptUserData(accessToken), usersOnline.get(user.discordId)!.activityToken);
                         usersOnline.delete(user.discordId);
-                        await callDeletePresence(decryptUserData(accessToken));
+                        logInfo(user.discordId, 'Previous presence deleted');
                     }
                     return;
                 }
 
-                logInfo(user.discordId, 'User is online, updating presence...');
-                const builtPresence = buildPresence(presence as PresenceOnline_4, usersOnline.get(user.discordId)?.game, usersOnline.get(user.discordId)?.timestamp, user.showHoursPlayed);
-                await callUpdatePresence(decryptUserData(accessToken), builtPresence);
+                logInfo(user.discordId, 'User is online');
+                const builtPresence = buildPresence(presence as PresenceOnline_4, user.discordId, user.showHoursPlayed);
+                const activityToken = await callUpdatePresence(decryptUserData(accessToken), builtPresence);
 
-                usersOnline.set(user.discordId, { timestamp: builtPresence.activities[0].timestamps.start, game: builtPresence.activities[0].name });
+                const activity = builtPresence.activities[0];
+                usersOnline.set(user.discordId, { timestamp: activity.timestamps.start, game: activity.name, activityToken });
                 logInfo(user.discordId, 'Presence synced');
             } catch (error: any) {
                 logError(user.discordId, `Network failure: ${error.message}`);
