@@ -2,7 +2,7 @@ import { Friend_4, SentFriendRequest } from '@samuelthomas2774/nxapi/coral';
 import callDeletePresence from '../clients/discord/callDeletePresence';
 import { User } from '../models/user';
 import deleteUsers from '../repository/deleteUsers';
-import getActiveUsers from '../repository/getActiveUsers';
+import getUsers from '../repository/getUsers';
 import getPendingUsers from '../repository/getPendingUsers';
 import updatePendingUsers from '../repository/updatePendingUsers';
 import { decryptUserData } from '../utils/encryptionUtils';
@@ -17,7 +17,7 @@ export default async function buildSyncUsers(): Promise<{ syncUsers: User[], fri
     let pendingFriendRequests: SentFriendRequest[] = [];
 
     try {
-        users = await getActiveUsers();
+        users = await getUsers();
     } catch (error: any) {
         console.error(`Failed to fetch active users: ${error.message}`);
         return;
@@ -50,6 +50,7 @@ export default async function buildSyncUsers(): Promise<{ syncUsers: User[], fri
         try {
             await updatePendingUsers(acceptedRequestUsers.map(user => user.discordId), false);
             const acceptedUsers = acceptedRequestUsers.map(user => { user.pendingFriendRequestApproval = false; return user; });
+            users = users.filter(user => !acceptedRequestUsers.some(acceptedUser => acceptedUser.discordId === user.discordId));
             users = users.concat(acceptedUsers);
         } catch (error: any) {
             console.error(`Failed to update accepted users: ${describeError(error)}`);
@@ -67,7 +68,7 @@ export default async function buildSyncUsers(): Promise<{ syncUsers: User[], fri
         }
     }
 
-    const usersNotInFriendList = users.filter(user => user.nintendoUserId && !user.pendingFriendRequestApproval && !friendList.some(friend => friend.nsaId === user.nintendoUserId));
+    const usersNotInFriendList = users.filter(user => user.nintendoUserId && !user.pendingFriendRequestApproval && friendList.every(friend => friend.nsaId !== user.nintendoUserId));
     if (usersNotInFriendList.length > 0) {
         console.warn(`Users in the database that are not in the friend list: ${usersNotInFriendList.length}`);
         for (const user of usersNotInFriendList) {
@@ -85,7 +86,7 @@ export default async function buildSyncUsers(): Promise<{ syncUsers: User[], fri
         }
     }
 
-    const usersNotInDatabase = friendList.filter(friend => !users.some(user => user.nintendoUserId === friend.nsaId));
+    const usersNotInDatabase = friendList.filter(friend => users.every(user => user.nintendoUserId !== friend.nsaId));
     if (usersNotInDatabase.length > 0) {
         console.warn(`Users in the friend list that are not in the database: ${usersNotInDatabase.length}`);
         await Promise.all(usersNotInDatabase.map(async (friend: Friend_4) => {
@@ -99,6 +100,6 @@ export default async function buildSyncUsers(): Promise<{ syncUsers: User[], fri
         }));
     }
 
-    const syncUsers = users.filter(user => !user.pendingFriendRequestApproval);
+    const syncUsers = users.filter(user => !user.pendingFriendRequestApproval && user.isPresenceActive && user.nintendoUserId);
     return { syncUsers, friendList };
 }
