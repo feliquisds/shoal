@@ -12,7 +12,7 @@
 <body>
     <img class="logo" src="./assets/logo.svg">
 
-    <div id="home">
+    <div id="home" hidden>
         <button class="big discord" onclick="window.location.href='/discord/auth'">
             <img src="./assets/discord.svg">Login with Discord
         </button>
@@ -84,6 +84,14 @@
                 <button class="deleteButton" onclick="deleteAccount()">Delete account</button>
             </div>
         </div>
+    </div>
+
+    <div id="popup" class="popup hide">
+        <div id="popupBanner">
+            <div id="popupIcon" class="popupIcon"></div>
+            <p id="popupBannerMessage"></p>
+        </div>
+        <p id="popupMessage"></p>
     </div>
 
     <script src="./js/main.js"></script>

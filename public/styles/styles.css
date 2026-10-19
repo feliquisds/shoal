@@ -18,7 +18,6 @@
     --text-muted: #8A8B8C;
 
     --success: #00A36C;
-    --warning: #F5A623;
     --critical: #AF4142;
 
     --discord: #5562EA;
@@ -162,6 +161,10 @@ body {
     width: 100%;
 }
 
+.friendRequestForm>input.error {
+    border-color: var(--critical);
+}
+
 .friendRequestForm>input:focus {
     outline: none;
 }
@@ -282,6 +285,60 @@ input:checked+.slider::before {
 
 
 
+/* popup */
+.popup {
+    position: fixed;
+    top: 30px;
+    background-color: var(--card);
+    padding: 20px;
+    border-radius: var(--card-radius);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.popup.hide {
+    transform: translateY(-150%);
+}
+
+.popup>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup>div>p {
+    font-weight: bold;
+    text-align: center;
+}
+
+.popupIcon {
+    width: 20px;
+    height: 20px;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+.popupIcon.critical {
+    background-color: var(--critical);
+    -webkit-mask-image: url('../assets/error.svg');
+    mask-image: url('../assets/error.svg');
+}
+
+.popupIcon.success {
+    background-color: var(--success);
+    -webkit-mask-image: url('../assets/success.svg');
+    mask-image: url('../assets/success.svg');
+}
+
+
+
 /* responsiveness */
 @media (max-width: 550px) {
     :root {
@@ -298,6 +355,6 @@ input:checked+.slider::before {
 
     .profiles {
         flex-direction: column;
-        gap: 5px;
+        gap: 10px;
     }
 }
