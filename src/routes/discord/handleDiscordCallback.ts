@@ -10,6 +10,7 @@ import describeError from '../../utils/errorUtils';
 import Callback from '../../models/callback';
 import { createDiscordAuthToken } from '../../utils/transientAuthUtils';
 import getUser from '../../repository/getUser';
+import { ERROR_DISCORD_AUTH_FAILED, ERROR_DISCORD_TOKEN_EXCHANGE_FAILED, ERROR_DISCORD_USER_FETCH_FAILED, ERROR_PROCESSING_DISCORD_CALLBACK_FAILED } from '../../config/appConstants';
 
 export default async function handleDiscordCallback(req: Request, res: Response, redirectUri: string): Promise<Response | void> {
     let callback = new Callback();
@@ -22,7 +23,7 @@ export default async function handleDiscordCallback(req: Request, res: Response,
         stateTemp = req.query.state as string;
     } catch (error: any) {
         console.error(`Error parsing query parameters: ${error.message}`);
-        callback.error = 'discord_auth_failed';
+        callback.error = ERROR_DISCORD_AUTH_FAILED;
         return res.redirect(`/?${callback.toSearchParams().toString()}`);
     }
 
@@ -31,7 +32,7 @@ export default async function handleDiscordCallback(req: Request, res: Response,
 
     if (!code || !state || !verifyDiscordState(state)) {
         console.error('Invalid Discord callback parameters');
-        callback.error = 'discord_auth_failed';
+        callback.error = ERROR_DISCORD_AUTH_FAILED;
         return res.redirect(`/?${callback.toSearchParams().toString()}`);
     }
 
@@ -40,7 +41,7 @@ export default async function handleDiscordCallback(req: Request, res: Response,
         const tokenData = (await tokenResponse.json()) as TokenData;
         if (!tokenResponse.ok || !tokenData.access_token) {
             console.error('Failed to exchange code for Discord token');
-            callback.error = 'discord_token_exchange_failed';
+            callback.error = ERROR_DISCORD_TOKEN_EXCHANGE_FAILED;
             return res.redirect(`/?${callback.toSearchParams().toString()}`);
         }
 
@@ -51,7 +52,7 @@ export default async function handleDiscordCallback(req: Request, res: Response,
         const user = (await userResponse.json()) as PublicDiscordUser;
         if (!userResponse.ok || !user.id) {
             console.error('Failed to fetch Discord user');
-            callback.error = 'discord_user_fetch_failed';
+            callback.error = ERROR_DISCORD_USER_FETCH_FAILED;
             return res.redirect(`/?${callback.toSearchParams().toString()}`);
         }
 
@@ -85,7 +86,7 @@ export default async function handleDiscordCallback(req: Request, res: Response,
         return res.redirect(`/?${callback.toSearchParams().toString()}`);
     } catch (error) {
         console.error('Error handling Discord callback: ', error);
-        callback.error = 'discord_auth_failed';
+        callback.error = ERROR_PROCESSING_DISCORD_CALLBACK_FAILED;
         return res.redirect(`/?${callback.toSearchParams().toString()}`);
     }
 }
