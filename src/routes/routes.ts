@@ -12,7 +12,7 @@ const redirectUri = (req: Request) => `${req.protocol}://${req.get('host')}/disc
 
 router.get('/discord/auth', (req, res) => {
     const state = createDiscordState();
-    return handleDiscordAuthUrl(req, res, state, redirectUri(req));
+    return handleDiscordAuthUrl(res, state, redirectUri(req));
 });
 
 router.get('/discord/auth/callback', async (req, res) => {
