@@ -5,29 +5,30 @@ import { createDiscordState } from '../utils/securityUtils';
 import handleNintendoRequest from './nintendo/handleNintendoRequest';
 import handleChangeSettings from './presence/handleChangeSettings';
 import handleDeleteAccount from './presence/handleDeleteAccount';
+import { ROUTE_DISCORD_AUTH, ROUTE_DISCORD_AUTH_CALLBACK, ROUTE_NINTENDO_CONNECT, ROUTE_PRESENCE_DELETE_ACCOUNT, ROUTE_PRESENCE_SETTINGS } from '../config/appConstants';
 
 const router = Router();
 
-const redirectUri = (req: Request) => `${req.protocol}://${req.get('host')}/discord/auth/callback`;
+const redirectUri = (req: Request) => `${req.protocol}://${req.get('host')}${ROUTE_DISCORD_AUTH_CALLBACK}`;
 
-router.get('/discord/auth', (req, res) => {
+router.get(ROUTE_DISCORD_AUTH, (req, res) => {
     const state = createDiscordState();
-    return handleDiscordAuthUrl(req, res, state, redirectUri(req));
+    return handleDiscordAuthUrl(res, state, redirectUri(req));
 });
 
-router.get('/discord/auth/callback', async (req, res) => {
+router.get(ROUTE_DISCORD_AUTH_CALLBACK, async (req, res) => {
     return await handleDiscordCallback(req, res, redirectUri(req));
 });
 
-router.post('/nintendo/connect', (req, res) => {
+router.post(ROUTE_NINTENDO_CONNECT, (req, res) => {
     return handleNintendoRequest(req, res);
 });
 
-router.put('/settings', (req, res) => {
+router.put(ROUTE_PRESENCE_SETTINGS, (req, res) => {
     return handleChangeSettings(req, res);
 });
 
-router.delete('/delete', (req, res) => {
+router.delete(ROUTE_PRESENCE_DELETE_ACCOUNT, (req, res) => {
     return handleDeleteAccount(req, res);
 });
 

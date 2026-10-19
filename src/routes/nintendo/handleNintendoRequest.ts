@@ -6,6 +6,7 @@ import describeError from '../../utils/errorUtils';
 import { getDiscordIdFromAuthToken } from '../../utils/transientAuthUtils';
 import getUser from '../../repository/getUser';
 import updatePendingUsers from '../../repository/updatePendingUsers';
+import { ERROR_DATABASE_FETCH_FAILED, ERROR_DATABASE_USER_NOT_FOUND, ERROR_NINTENDO_FRIEND_REQUEST_FAILED, ERROR_NINTENDO_INVALID_FRIEND_CODE, ERROR_NINTENDO_USER_NOT_FOUND, ERROR_PROCESSING_NINTENDO_REQUEST_FAILED, ERROR_TRANSIENT_AUTH_FAILED } from '../../config/appConstants';
 
 export default async function handleNintendoRequest(req: Request, res: Response): Promise<Response | void> {
     let callback = new Callback();
@@ -15,7 +16,7 @@ export default async function handleNintendoRequest(req: Request, res: Response)
 
     if (!discordId) {
         console.error('Transient auth token missing or invalid');
-        callback.error = 'invalid_transient_auth';
+        callback.error = ERROR_TRANSIENT_AUTH_FAILED;
         return res.status(400).json(callback);
     }
 
@@ -24,20 +25,20 @@ export default async function handleNintendoRequest(req: Request, res: Response)
         getDiscordUser = await getUser(discordId);
     } catch (error: any) {
         console.error(`Error occurred while fetching Discord user: ${describeError(error)}`);
-        callback.error = 'user_fetch_failed';
+        callback.error = ERROR_DATABASE_FETCH_FAILED;
         return res.status(500).json(callback);
     }
     
     const discordUser = getDiscordUser;
     if (!discordUser) {
         console.error(`User with Discord ID ${discordId} not found`);
-        callback.error = 'user_not_found';
+        callback.error = ERROR_DATABASE_USER_NOT_FOUND;
         return res.status(400).json(callback);
     }
 
     if (!friendCode || typeof friendCode !== 'string' || !testFriendCodeFormat(friendCode)) {
         console.error('Invalid friend code provided');
-        callback.error = 'invalid_friend_code';
+        callback.error = ERROR_NINTENDO_INVALID_FRIEND_CODE;
         return res.status(400).json(callback);
     }
 
@@ -50,7 +51,7 @@ export default async function handleNintendoRequest(req: Request, res: Response)
         } catch (error: any) {
             if (describeError(error).includes('not found')) {
                 console.error(`Failed to find user through friend code: ${describeError(error)}`);
-                callback.error = 'user_not_found';
+                callback.error = ERROR_NINTENDO_USER_NOT_FOUND;
                 return res.status(400).json(callback);
             }
             throw error;
@@ -76,7 +77,7 @@ export default async function handleNintendoRequest(req: Request, res: Response)
                 console.info(`Nintendo user ${user.nsaId} is already a friend`);
             else {
                 console.error(`Failed to send friend request: ${describeError(error)}`);
-                callback.error = 'friend_request_failed';
+                callback.error = ERROR_NINTENDO_FRIEND_REQUEST_FAILED;
                 return res.status(400).json(callback);
             }
         }
@@ -91,7 +92,7 @@ export default async function handleNintendoRequest(req: Request, res: Response)
         return res.status(200).json(callback);
     } catch (error: any) {
         console.error(`Error occurred while connecting to Nintendo: ${describeError(error)}`);
-        callback.error = 'nintendo_connection_failed';
+        callback.error = ERROR_PROCESSING_NINTENDO_REQUEST_FAILED;
         return res.status(500).json(callback);
     }
 }
