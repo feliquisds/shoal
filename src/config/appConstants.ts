@@ -4,7 +4,7 @@ export const ROUTE_NINTENDO_CONNECT = '/nintendo/connect';
 export const ROUTE_PRESENCE_SETTINGS = '/settings';
 export const ROUTE_PRESENCE_DELETE_ACCOUNT = '/delete';
 
-export const DISCORD_AUTH_SCOPES = 'openid+sdk.social_layer_presence';
+export const DISCORD_AUTH_SCOPES = 'openid sdk.social_layer_presence';
 export const DISCORD_AUTH_CONNECTED_APP_URL = 'https://discord.com/api/oauth2/authorize';
 export const DISCORD_AUTH_TOKEN_URL = 'https://discord.com/api/oauth2/token';
 export const DISCORD_AUTH_REVOKE_TOKEN_URL = 'https://discord.com/api/oauth2/token/revoke';
